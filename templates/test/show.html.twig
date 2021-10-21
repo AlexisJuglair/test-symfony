@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Liste des stagiaires{% endblock %}
+
+{% block body %}
+    <h1>Liste des stagiaires</h1>
+
+    <p>Vous avez {{ age }} ans.</p>
+
+    <p>Redirection vers la page <a href="{{ path('home') }}">Home</a>.</p>
+
+    <ul>
+        {# Ceci est un commentaire #}
+        {% for name in names %}
+            {% if name == "thierry" %}
+                <li>{{ name }}</li>
+            {% endif %}   
+        {% endfor %}
+    </ul>
+{% endblock %}

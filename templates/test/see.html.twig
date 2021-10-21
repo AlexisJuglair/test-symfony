@@ -1,0 +1,90 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ parent() }}Liste des stagiaires{% endblock %}
+
+{% block body %}
+    <h1>Liste des stagiaires</h1>
+
+    <p><span style="text-decoration: underline;">Consignes :</span> Créer une nouvelle route <em>/test/see</em> dans <em>TestController</em>, ayant pour nom <em>test-see</em> et commme nom de fonction <em>see</em>.</p>
+    <p>Faire un tableau <em>$trainees</em> de tous les stagiaires avec leurs <strong>prénoms</strong> et <strong>âges</strong>.<br>
+        Ce tableau est à passer à la vue, tout comme les variables <em>$ageMore</em> et <em>$ageLess</em>.
+    </p>
+    <p>Les stagiaires sont classés par <strong>ordre alphabétique.</strong><br>
+        Les stagiaires qui ont {{ ageMore }} <em>(nombre aléatoire compris entre 35 et 45)</em> ans ou plus sont en <strong>majuscules</strong>.<br>
+        Les stagiaires qui ont {{ ageLess }} ans ou moins ont <strong>uniquement la première lettre en majuscule.</strong><br>
+        Les stagiaires restants restent en <strong>minuscules</strong>.</p>
+
+    <p>Déclarez une variable <em>dateNow</em> dans votre template dans laquelle vous mettrez la date du jour.<br>
+        Affichez-là ensuite.</p>
+
+    <p>Mettez le fichier <em>_lorem.html.twig</em> dans le dossier test et incluez-le dans cette même page.<br>
+    Vous ferez passez une variable une variable <em>color</em> de valeur <em>blue</em> et une variable <em>length</em> qui renverra le nombre d'entrées du tableau <em>trainees</em>.</p>
+
+    <p>Vous aurez besoin des filtres pour certaines parties : <a href="https://twig.symfony.com/doc/3.x/">https://twig.symfony.com/doc/3.x/</a></p>
+
+    <p>Mettre le style de Bootstrap dans le block stylesheets du template de base : "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"</p>
+
+    <p>Créer un fichier macros/example.html.twig et faites une <strong>macro</strong> ayant pour nom concate qui prendra 3 paramètres : name, character et number.<br>
+    Si la variable name <strong>débute avec</strong> un a <strong>ou</strong> si number <strong>est impair</strong> ou si character <strong>n'est pas</strong> un B,<br>
+    alors on crée une div avec la class alert alert-danger et à l'intérieur on met la phrase sur l'exemple, en concaténant les variables et les chaînes de caractères,<br>
+    sinon on applique à la div la class alert alert-success avec la même phrase.</p>
+
+    <p><strong>Importer</strong> ce fichier dans test/see.html.twig.<br>
+    Créer une variable name qui prendra <strong>un nom aléatoire</strong> dans le tableau trainees.<br>
+    Créer une variable character qui prendra <strong>une valeur aléatoire</strong> entre A, B et C.<br>
+    Créer une variable number qui prendra <strong>une valeur aléatoire</strong> entre 1 et 26.<br>
+    <strong>Appeler la macro</strong> concate avec ces 3 variables.</p>
+
+    <p>Appelez-moi quand vous en êtes là.</p>
+
+    <p>Exécuter la commande suivante : composer require symfony/maker-bundle<br>
+    Exécuter la commande suivante pour créer un fichier dans le dossier src/twig : symfony console make:twig-extension<br>
+    Donnez le nom TestExtension.</p>
+
+    <p>Dans ce fichier, créer un filtre firstword qui <strong>retournera le premier mot</strong> d'une chaîne de caractère.</p>
+
+    <p>Dans ce même fichier, créer une fonction makebtn qui permettra de choisir et d'afficher le type de bouton Bootstrap et qui prendra en paramètre le nom du bouton et le type de bouton Bootstrap, avec comme valeur par défaut vide.<br>
+    Si la variable est vide ou si le nom ne correspond à aucun des autres types, alors on affichera un bouton de type link.<br>
+    Les types de boutons Bootstrap : https://getbootstrap.com/docs/5.1/components/buttons/</p>
+
+    <p>Créer une <strong>macro</strong> makeform qui ne prendra aucun paramètre et initialisera un formulaire avec :<br>
+    - un input de type text avec la class form-control et un placeholder "Ceci est un input" avec le filtre firstword.<br>
+    - un appel de la fonction makebtn ayant pour paramètre "Envoyer" et "primary".</p>
+
+    <p><strong>Appeler la macro</strong> makeform dans test/see.html.twig</p>
+
+    <hr>
+
+    <ol>
+        {% for trainee in trainees|sort %}
+            {% if trainee.age <= ageLess %}
+                <li>{{ trainee.name|capitalize }} a {{ trainee.age }} ans.</li>
+            {% elseif trainee.age >= ageMore  %}
+                <li>{{ trainee.name|upper }} a {{ trainee.age }} ans.</li>
+            {% else %}
+                <li>{{ trainee.name }} a {{ trainee.age }} ans.</li>
+            {% endif %}  
+        {% endfor %}
+    </ol>
+
+    {% set dateNow = "now"|date("d/m/Y H:i", "Europe/Paris") %}
+    <p>Nous sommes le {{ dateNow }}.</p>
+
+    {% include "test/_lorem.html.twig" with {
+        'color': 'blue',
+        'length': trainees|length
+    }%}
+
+    {% import "macros/example.html.twig" as example %}
+
+    {% set name = trainees[random(0,9)].name %}
+    {% set character = random('ABC') %}
+    {% set number = random(1,26) %}
+
+    {{ example.concate(name, character, number)}}
+
+    {{ example.makeform()}}
+      
+    
+
+{% endblock %}
