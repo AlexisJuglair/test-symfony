@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -19,26 +20,46 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      min=3, 
+     *      max=255, 
+     *      minMessage="Le nom du produit doit avoir au moins {{ limit }} caractères.",
+     *      maxMessage="Le nom du produit ne doit pas excéder {{ limit }} caractères."
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(
+     *      min=20, 
+     *      max=300, 
+     *      minMessage="La description courte doit avoir au moins {{ limit }} caractères.",
+     *      maxMessage="La description courte ne doit pas excéder {{ limit }} caractères."
+     * )
      */
     private $shortDescription;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(
+     *      min=50, 
+     *      max=1000, 
+     *      minMessage="La description longue doit avoir au moins {{ limit }} caractères.",
+     *      maxMessage="La description longue ne doit pas excéder {{ limit }} caractères."
+     * )
      */
     private $longDescription;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive(message="{{ value }} n'est pas supérieur à 0.")
      */
     private $price;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive(message="{{ value }} n'est pas supérieur à 0.")
      */
     private $quantity;
 
@@ -54,6 +75,7 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url(message="La photo principale doit être une URL valide.")
      */
     private $mainPicture;
 
@@ -62,6 +84,11 @@ class Product
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updated_at;
 
     public function getId(): ?int
     {
@@ -172,6 +199,18 @@ class Product
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }  

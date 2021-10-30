@@ -12,6 +12,7 @@ class TestExtension extends AbstractExtension
     {
         return [
             new TwigFilter('firstword', [$this, 'explodeString']),
+            new TwigFilter('formatrole', [$this, 'formatRole']),
         ];
     }
 
@@ -24,8 +25,16 @@ class TestExtension extends AbstractExtension
 
     public function explodeString($string)
     {
-        $word = explode(" ", $string);
-        return $word[0];
+        $word = explode(" ", $string)[0];
+
+        $word = str_replace(",", "", $word);
+        $word = str_replace(".", "", $word);
+        $word = str_replace("?", "", $word);
+        $word = str_replace("!", "", $word);
+        $word = str_replace(":", "", $word);
+        $word = str_replace(";", "", $word);
+
+        return $word;
     }
 
     public function makeButton($name, $type="")
@@ -72,5 +81,13 @@ class TestExtension extends AbstractExtension
                 echo "<button type='button' class='btn btn-link'>$name</button>";
                 break;
         }
+    }
+
+    public function formatRole($roles)
+    {
+        $role = explode(" ", $roles)[0];
+        $role = explode("_", $role)[1];
+
+        return $role;
     }
 }

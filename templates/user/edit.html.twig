@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ action }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-center my-5">Modifier {{ action }}</h1>
+
+    <div class="container">
+        {{ form_start((formUser)) }}
+            <div class="row my-3">
+                <div class="col">
+                    {{ form_row(formUser.email) }} 
+                </div>
+                <div class="col">
+                    {{ form_row(formUser.plainPassword) }}
+                </div> 
+                <div class="col">
+                    {{ form_row(formUser.fullName) }}
+                </div> 
+            </div>
+
+            <div class="row my-3">
+                <div class="col">
+                    {{ form_row(formUser.address) }}
+                </div>
+                <div class="col">
+                    {{ form_row(formUser.zipCode) }}
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col">
+                    {{ form_row(formUser.city) }} 
+                </div>
+                <div class="col">
+                    {{ form_row(formUser.country) }} 
+                </div>
+                <div class="col">
+                    {{ form_row(formUser.phoneNumber) }}
+                </div>
+            </div>
+
+            {% if is_granted("ROLE_ADMIN") %}       
+                <div class="row my-3">
+                    <div class="col d-flex justify-content-end">
+                        {{ form_row(formUser.roles) }}
+                    </div>
+                </div>
+                {% else %}
+                    {% do formUser.roles.setRendered() %}
+            {% endif %}
+
+            <div class="row my-3">
+                <div class="col d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Modifier le profil</button>
+                </div>
+            </div>
+        {{ form_end((formUser)) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/check_role.js') }}"></script>
+{% endblock %}

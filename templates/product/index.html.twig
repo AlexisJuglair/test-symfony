@@ -3,12 +3,19 @@
 {% block title %}Liste des produits{% endblock %}
 
 {% block body %}
-    <h1 class="text-center my-5">Liste des produits</h1>
+    <h1 class="text-center my-5">Liste des produits 
+        {% if is_granted("ROLE_ADMIN") %}
+            <a class="btn btn-primary" href="{{ path('product_add') }}">Ajouter</a>
+        {% endif %}
+    </h1>
 
     <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for product in products %}
-                {% if product.visible == 1 %}
+                {# {% if product.visible == 1 %} #}
                     <div class="col">
                         <div class="card h-100">
                             <img src="{{ product.mainPicture }}" class="card-img-top" alt="...">
@@ -17,17 +24,21 @@
                                 <h5 class="card-title">{{ product.name }}</h5>
                                 <p class="card-text">{{ product.shortDescription|u.truncate(100, '...', false) }}</p>
                                 <a class="btn btn-primary" href="{{ path('product_show', {'id': product.id }) }}" target="_blanck">Plus de détails</a>
+                                {% if is_granted("ROLE_ADMIN") %}
+                                    <a class="btn btn-secondary" href="{{ path('product_edit', {'id': product.id}) }}">Modifier</a>
+                                    {{ include('product/_delete_form.html.twig') }}
+                                {% endif %}
                             </div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">{{ product.price }} €</li>
                                 <li class="list-group-item">{{ product.quantity }} en stock</li>
                             </ul>
                             <div class="card-footer">
-                                <small class="text-muted">Ajouté le {{ product.createdAt|date("d/m/Y")}}</small>
+                                <small class="text-muted">Modifié le {{ product.updatedAt|date("d/m/Y")}} à {{ product.updatedAt|date("H:i")}}</small>
                             </div>
                         </div>
                     </div>
-                {% endif %}
+                {# {% endif %} #}
             {% endfor %}
             
         </div>
